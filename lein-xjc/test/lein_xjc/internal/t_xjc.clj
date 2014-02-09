@@ -9,7 +9,7 @@
                    schema {:xsd-file xsd-file}
                    target-dir "/path/to/target/dir" ]
                (xjc/mk-xjc-argv target-dir schema)
-               => ["-d " target-dir xsd-file])))
+               => ["-d" target-dir xsd-file])))
 
 (fact "call-xjc converts the given schema to an xjc argv and calls the xjc
       Driver"

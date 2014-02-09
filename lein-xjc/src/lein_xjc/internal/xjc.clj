@@ -3,7 +3,7 @@
 
 (defn mk-xjc-argv
   [target-dir schema]
-  ["-d " (str target-dir) (:xsd-file schema)])
+  ["-d" (str target-dir) (:xsd-file schema)])
 
 (defn xjc-main
   [argv]
