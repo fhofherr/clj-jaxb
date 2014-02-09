@@ -17,5 +17,3 @@
       (provided
         (xjc/mk-xjc-argv ..some-target-dir.. ..schema..) => ..xjc-argv..
         (xjc/xjc-main ..xjc-argv..) => irrelevant))
-
-

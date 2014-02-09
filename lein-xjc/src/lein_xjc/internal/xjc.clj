@@ -1,4 +1,5 @@
-(ns lein-xjc.internal.xjc)
+(ns lein-xjc.internal.xjc
+  (:import [com.sun.tools.xjc Driver]))
 
 (defn mk-xjc-argv
   [target-dir schema]
@@ -6,8 +7,7 @@
 
 (defn xjc-main
   [argv]
-  ;; TODO call com.sun.tools.xjc.Driver)
-  )
+  (Driver/main (into-array String argv)))
 
 (defn call-xjc
   [target-dir schema]
