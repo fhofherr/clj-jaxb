@@ -1,20 +1,8 @@
 (ns lein-xjc.plugin
-  (:require [clojure.java.io :as io]))
+  (:require [lein-xjc.internal.target-dir :as td]))
 
 (def ^:private plugin-defaults
   {:xjc-plugin {:generated-java "generated-java"}})
-
-(defn generated-java-dir
-  [project]
-  (let [generated-java (get-in project [:xjc-plugin :generated-java])
-        target-path (:target-path project)]
-    (assert (not (nil? generated-java)) ":xjc-plugin :generated-java missing!")
-    (io/file target-path generated-java)))
-
-(defn create-generated-java-dir
-  [project]
-  (let [dir (generated-java-dir project)]
-    (.mkdirs dir)))
 
 (defn mk-xjc-argv
   [target-dir schema]
@@ -31,15 +19,20 @@
 
 (defn middleware
   [project]
-  (let [dir (generated-java-dir project)
+  (let [xjc-target-dir (td/mk-xjc-target-dir (:root project)
+                                             (:target-path project)
+                                             (get-in project
+                                                     [:xjc-plugin :generated-java]))
         old-java-source-paths (:java-source-paths project)]
-    (assoc project :java-source-paths (cons (str dir) old-java-source-paths))))
+    (assoc project :java-source-paths (cons (str xjc-target-dir)
+                                            old-java-source-paths))))
 
 (defn xjc-task
   [project]
   (let [merged-project (merge plugin-defaults project)
-        dir (generated-java-dir merged-project)
+        xjc-target-dir (td/mk-xjc-target-dir (:root merged-project)
+                                  (:target-path merged-project)
+                                  (get-in merged-project [:xjc-plugin :generated-java]))
         schemas (get-in merged-project [:xjc-plugin :schemas])]
-    (create-generated-java-dir merged-project)
     (doseq [s schemas]
-      (call-xjc dir s))))
+      (call-xjc xjc-target-dir s))))
