@@ -16,13 +16,14 @@
   [snippet & snippets]
   (merge base-project snippet snippets))
 
+
 (fact "Given no plugin config creates a 'generated-java' directory inside
       the project's target directory."
       (let [project (merge-project-snippet {})
             target-path (:target-path project)
             generated-java "generated-java"
             mock-file (mock java.io.File)]
-        (xjc/xjc project) => (fn [_]
+        (plugin/xjc-task project) => (fn [_]
                                (verify-> mock-file (.mkdirs))
                                true)
         (provided
