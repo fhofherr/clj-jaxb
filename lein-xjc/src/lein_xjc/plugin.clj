@@ -11,10 +11,23 @@
     (assert (not (nil? generated-java)) ":xjc-plugin :generated-java missing!")
     (io/file target-path generated-java)))
 
-(defn- create-generated-java-dir
+(defn create-generated-java-dir
   [project]
   (let [dir (generated-java-dir project)]
     (.mkdirs dir)))
+
+(defn mk-xjc-argv
+  [target-dir schema]
+  ["-d " (str target-dir) (:xsd-file schema)])
+
+(defn xjc-main
+  [argv]
+  ;; TODO call com.sun.tools.xjc.Driver)
+  )
+
+(defn call-xjc
+  [target-dir schema]
+  (xjc-main (mk-xjc-argv target-dir schema)))
 
 (defn middleware
   [project]
@@ -24,5 +37,9 @@
 
 (defn xjc-task
   [project]
-  (let [merged-project (merge plugin-defaults project)]
-    (create-generated-java-dir merged-project)))
+  (let [merged-project (merge plugin-defaults project)
+        dir (generated-java-dir merged-project)
+        schemas (get-in merged-project [:xjc-plugin :schemas])]
+    (create-generated-java-dir merged-project)
+    (doseq [s schemas]
+      (call-xjc dir s))))
