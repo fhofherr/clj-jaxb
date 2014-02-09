@@ -1,15 +1,13 @@
 (ns leiningen.xjc
-  (:require [clojure.java.io :as io]))
+  (:require [lein-xjc.plugin :refer :all]))
 
 (def ^:private plugin-defaults
   {:xjc-plugin {:generated-java "generated-java"}})
 
 (defn- create-generated-java-dir
   [project]
-  (let [generated-java (get-in project [:xjc-plugin :generated-java])
-        target-path (:target-path project)
-        generated-java-dir (io/file target-path generated-java)]
-    (.mkdirs generated-java-dir)))
+  (let [dir (generated-java-dir project)]
+    (.mkdirs dir)))
 
 (defn xjc
   [project & args]
