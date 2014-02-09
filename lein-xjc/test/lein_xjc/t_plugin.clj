@@ -1,8 +1,8 @@
 (ns lein-xjc.t-plugin
   (:require [cljito.core :refer :all]
-            [leiningen.xjc :as xjc]
             [lein-xjc.plugin :as plugin]
             [lein-xjc.internal.target-dir :as td]
+            [lein-xjc.internal.xjc :as xjc]
             [midje.sweet :refer :all])
   (:import [com.sun.tools.xjc Driver]))
 
@@ -16,22 +16,6 @@
 (defn merge-project-snippet
   [snippet & snippets]
   (merge base-project snippet snippets))
-
-(facts "about mk-xjc-argv"
-       (fact "given just a schema file and a target directory it creates an
-             argv that compiles the given schema to the given target"
-             (let [xsd-file "/path/to/schema.xsd"
-                   schema {:xsd-file xsd-file}
-                   target-dir "/path/to/target/dir" ]
-               (plugin/mk-xjc-argv target-dir schema)
-               => ["-d " target-dir xsd-file])))
-
-(fact "call-xjc converts the given schema to an xjc argv and calls the xjc
-      Driver"
-      (plugin/call-xjc ..some-target-dir.. ..schema..) => irrelevant
-      (provided
-        (plugin/mk-xjc-argv ..some-target-dir.. ..schema..) => ..xjc-argv..
-        (plugin/xjc-main ..xjc-argv..) => irrelevant))
 
 (facts "about xjc-task"
        (fact "Given no plugin config creates a 'generated-java' directory inside
@@ -57,8 +41,8 @@
                                        ..target-path..
                                        ..generated-java..)
                  => ..some-target..
-                 (plugin/call-xjc ..some-target.. ..schema1..) => irrelevant
-                 (plugin/call-xjc ..some-target.. ..schema2..) => irrelevant))))
+                 (xjc/call-xjc ..some-target.. ..schema1..) => irrelevant
+                 (xjc/call-xjc ..some-target.. ..schema2..) => irrelevant))))
 
 (fact "middleware prepends the generated java directory to the
       :java-source-paths"

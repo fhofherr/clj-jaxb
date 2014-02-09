@@ -1,21 +1,9 @@
 (ns lein-xjc.plugin
-  (:require [lein-xjc.internal.target-dir :as td]))
+  (:require [lein-xjc.internal.target-dir :as td]
+            [lein-xjc.internal.xjc :as xjc]))
 
 (def ^:private plugin-defaults
   {:xjc-plugin {:generated-java "generated-java"}})
-
-(defn mk-xjc-argv
-  [target-dir schema]
-  ["-d " (str target-dir) (:xsd-file schema)])
-
-(defn xjc-main
-  [argv]
-  ;; TODO call com.sun.tools.xjc.Driver)
-  )
-
-(defn call-xjc
-  [target-dir schema]
-  (xjc-main (mk-xjc-argv target-dir schema)))
 
 (defn middleware
   [project]
@@ -35,4 +23,4 @@
                                   (get-in merged-project [:xjc-plugin :generated-java]))
         schemas (get-in merged-project [:xjc-plugin :schemas])]
     (doseq [s schemas]
-      (call-xjc xjc-target-dir s))))
+      (xjc/call-xjc xjc-target-dir s))))
