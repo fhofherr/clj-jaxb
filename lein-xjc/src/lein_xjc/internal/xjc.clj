@@ -15,5 +15,4 @@
 (defn call-xjc
   [project-root target-dir xjc-calls]
   (doseq [argv (mk-xjc-argvs project-root target-dir xjc-calls)]
-    (println argv)
     (xjc-main argv)))
