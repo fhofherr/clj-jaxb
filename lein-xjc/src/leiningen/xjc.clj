@@ -3,4 +3,5 @@
 
 (defn xjc
   [project & args]
-  (plugin/xjc-task project))
+  (plugin/xjc-task project)
+  project)
