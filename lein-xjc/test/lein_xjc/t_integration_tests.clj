@@ -42,7 +42,7 @@
 (fact-group
   :integration-test
   (let [project-reader (read-test-project  "single-xsd")]
-    (fact "running lein xjc creates the java classes for
+    (fact "running lein xjc creates the java sources for
           the simple.xsd schema."
           (xjc/xjc (project-reader)) => (java-sources-created
                                           ["com.example.ObjectFactory"
