@@ -22,16 +22,15 @@
              (let [project {:root ..project-root..
                             :target-path ..target-path..
                             :xjc-plugin {:generated-java ..generated-java..
-                                         :schemas [..schema1..
-                                                   ..schema2..]}}]
+                                         :xjc-calls ..xjc-calls..}}]
                (plugin/xjc-task project) => irrelevant
                (provided
                  (td/mk-xjc-target-dir ..project-root..
                                        ..target-path..
                                        ..generated-java..)
                  => ..some-target..
-                 (xjc/call-xjc ..some-target.. ..schema1..) => irrelevant
-                 (xjc/call-xjc ..some-target.. ..schema2..) => irrelevant))))
+                 (xjc/call-xjc ..project-root.. ..some-target.. ..xjc-calls..)
+                 => irrelevant))))
 
 (fact "middleware prepends the generated java directory to the
       :java-source-paths"

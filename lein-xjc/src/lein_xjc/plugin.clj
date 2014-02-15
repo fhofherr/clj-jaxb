@@ -21,6 +21,5 @@
         xjc-target-dir (td/mk-xjc-target-dir (:root merged-project)
                                   (:target-path merged-project)
                                   (get-in merged-project [:xjc-plugin :generated-java]))
-        schemas (get-in merged-project [:xjc-plugin :schemas])]
-    (doseq [s schemas]
-      (xjc/call-xjc xjc-target-dir s))))
+        xjc-calls (get-in merged-project [:xjc-plugin :xjc-calls])]
+    (xjc/call-xjc (:root project) xjc-target-dir xjc-calls)))

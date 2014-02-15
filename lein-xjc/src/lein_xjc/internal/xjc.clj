@@ -1,9 +1,11 @@
 (ns lein-xjc.internal.xjc
   (:import [com.sun.tools.xjc Driver]))
 
-(defn mk-xjc-argv
-  [target-dir schema]
-  ["-d" (str target-dir) (:xsd-file schema)])
+(defn mk-xjc-argvs
+  [project-root target-dir xjc-calls]
+  (map (fn [c] ["-d" (str target-dir)
+                (format "%s/%s" project-root (:xsd-file c)) ])
+       xjc-calls))
 
 (defn xjc-main
   [argv]
@@ -11,5 +13,7 @@
   (Driver/main (into-array String argv)))
 
 (defn call-xjc
-  [target-dir schema]
-  (xjc-main (mk-xjc-argv target-dir schema)))
+  [project-root target-dir xjc-calls]
+  (doseq [argv (mk-xjc-argvs project-root target-dir xjc-calls)]
+    (println argv)
+    (xjc-main argv)))
