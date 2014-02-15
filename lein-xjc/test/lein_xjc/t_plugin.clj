@@ -32,7 +32,7 @@
                  (xjc/call-xjc ..project-root.. ..some-target.. ..xjc-calls..)
                  => irrelevant))))
 
-(fact "middleware prepends the generated java directory to the
+(fact "extend-java-source-paths prepends the generated java directory to the
       :java-source-paths"
       (let [project {:root ..project-root..
                             :target-path ..target-path..
@@ -42,10 +42,21 @@
             expected-project (assoc project
                                     :java-source-paths
                                     expected-java-source-paths)]
-        (plugin/middleware project) => expected-project
+        (plugin/extend-java-source-paths project) => expected-project
         (provided
           (td/mk-xjc-target-dir
             ..project-root..
             ..target-path..
             ..generated-java..)
           => ..xjc-target-dir..)))
+
+(fact "add-prep-task adds 'xjc' to the :prep-tasks"
+      (let [project {:prep-tasks ["clean" "javac" "compile"]}
+            expected-project {:prep-tasks ["clean" "xjc" "javac" "compile"]}]
+        (plugin/add-prep-task project) => expected-project))
+
+(fact "middleware extends the java-source-paths and adds the xjc prep task"
+      (plugin/middleware ..project..) => ..project..
+      (provided
+        (plugin/add-prep-task ..project..) => ..project..
+        (plugin/extend-java-source-paths ..project..) => ..project..))

@@ -1,6 +1,7 @@
 (ns lein-xjc.t-integration-tests
   (:require [clojure.java.io :as io]
             [clojure.string :as s]
+            [leiningen.install :as install]
             [leiningen.xjc :as xjc]
             [leiningen.core.project :as project]
             [leiningen.clean :as clean]
@@ -28,8 +29,8 @@
   (let [file (io/file path)]
     (and (.exists file) (.isFile file))))
 
-(defchecker java-sources-created [class-names]
-  (checker [project]
+(defchecker java-sources-created [project class-names]
+  (checker [_]
            (let [generated-java (format "%s/%s"
                                         (:target-path project)
                                         (get-in project [:xjc-plugin :generated-java]))
@@ -39,11 +40,28 @@
                                 class-names)]
              (every? file-exists? src-files))))
 
+(defchecker java-classes-created [project class-names]
+  (checker [_]
+           (let [classes-dir (format "%s/classes" (:target-path project))
+                 class-files (map #(format "%s/%s.class"
+                                           classes-dir
+                                           (s/replace % #"\." "/"))
+                                  class-names)]
+             (every? file-exists? class-files))))
+
 (fact-group
   :integration-test
   (let [project-reader (read-test-project  "single-xsd")]
-    (fact "running lein xjc creates the java sources for
+    (fact "running 'lein xjc' generates the java sources for
           the simple.xsd schema."
-          (xjc/xjc (project-reader)) => (java-sources-created
-                                          ["com.example.ObjectFactory"
-                                           "com.example.Something"]))))
+          (let [project (project-reader)]
+            (xjc/xjc project) => (java-sources-created
+                                   project
+                                   ["com.example.ObjectFactory"
+                                    "com.example.Something"])))
+    (fact "running 'lein install' compiles the generated java classes"
+          (let [project (project-reader)]
+            (install/install project) => (java-classes-created
+                                       project
+                                       ["com.example.ObjectFactory"
+                                        "com.example.Something"])))))

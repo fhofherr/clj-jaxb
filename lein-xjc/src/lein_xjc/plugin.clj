@@ -5,7 +5,15 @@
 (def ^:private plugin-defaults
   {:xjc-plugin {:generated-java "generated-java"}})
 
-(defn middleware
+(defn add-prep-task
+  [project]
+  (let [prep-tasks (mapcat #(if (= % "javac")
+                              ["xjc" "javac"]
+                              [%] )
+                           (:prep-tasks project))]
+    (assoc project :prep-tasks prep-tasks)))
+
+(defn extend-java-source-paths
   [project]
   (let [xjc-target-dir (td/mk-xjc-target-dir (:root project)
                                              (:target-path project)
@@ -23,3 +31,9 @@
                                   (get-in merged-project [:xjc-plugin :generated-java]))
         xjc-calls (get-in merged-project [:xjc-plugin :xjc-calls])]
     (xjc/call-xjc (:root project) xjc-target-dir xjc-calls)))
+
+(defn middleware
+  [project]
+  (-> project
+      add-prep-task
+      extend-java-source-paths))
