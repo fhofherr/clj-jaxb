@@ -7,6 +7,7 @@
 
 (defn xjc-main
   [argv]
+  ;; TODO: fork process to avoid driver killing currently executing jvm
   (Driver/main (into-array String argv)))
 
 (defn call-xjc
