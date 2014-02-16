@@ -49,19 +49,21 @@
                                   class-names)]
              (every? file-exists? class-files))))
 
-(fact-group
-  :integration-test
-  (let [project-reader (read-test-project  "single-xsd")]
-    (fact "running 'lein xjc' generates the java sources for
-          the simple.xsd schema."
-          (let [project (project-reader)]
-            (xjc/xjc project) => (java-sources-created
-                                   project
-                                   ["com.example.ObjectFactory"
-                                    "com.example.Something"])))
-    (fact "running 'lein install' compiles the generated java classes"
-          (let [project (project-reader)]
-            (install/install project) => (java-classes-created
+(def read-single-xsd-project (read-test-project "single-xsd"))
+
+(fact "running 'lein xjc' generates the java sources for
+      the simple.xsd schema."
+      :integration-test
+      (let [project (read-single-xsd-project)]
+        (xjc/xjc project) => (java-sources-created
+                               project
+                               ["com.example.ObjectFactory"
+                                "com.example.Something"])))
+
+(fact "running 'lein install' compiles the generated java classes"
+      :integration-test
+      (let [project (read-single-xsd-project)]
+        (install/install project) => (java-classes-created
                                        project
                                        ["com.example.ObjectFactory"
-                                        "com.example.Something"])))))
+                                        "com.example.Something"])))
