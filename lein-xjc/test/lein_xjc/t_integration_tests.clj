@@ -62,6 +62,9 @@
                                ["com.example.ObjectFactory"
                                 "com.example.Something"])))
 
+;; Note: Reading the test projects automatically cleans them. Thus
+;; running 'lein install' actually regenerates and compiles the java
+;; source files. This behavior is intended.
 (fact "running 'lein install' compiles the generated java classes"
       :integration-test
       (let [project (read-single-xsd-project)]
