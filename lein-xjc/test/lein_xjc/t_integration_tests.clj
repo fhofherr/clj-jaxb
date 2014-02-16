@@ -50,6 +50,8 @@
              (every? file-exists? class-files))))
 
 (def read-single-xsd-project (read-test-project "single-xsd"))
+(def read-mult-xsd-with-bindings-project
+  (read-test-project "mult-xsd-with-bindings"))
 
 (fact "running 'lein xjc' generates the java sources for
       the simple.xsd schema."
@@ -67,3 +69,14 @@
                                        project
                                        ["com.example.ObjectFactory"
                                         "com.example.Something"])))
+
+(fact "specifying a bindings file via the :bindings keyword makes xjc
+      take it into account"
+      :integration-test
+      (let [project (read-mult-xsd-with-bindings-project)]
+        (xjc/xjc project) => (java-sources-created
+                               project
+                               ["test.first.binding.ObjectFactory"
+                                "test.first.binding.FirstXsdType1"
+                                "test.second.binding.ObjectFactory"
+                                "test.second.binding.SecondXsdType1"])))
