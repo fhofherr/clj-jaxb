@@ -2,6 +2,7 @@
   (:require [clojure.java.io :as io]
             [clojure.string :as s]
             [leiningen.install :as install]
+            [lein-xjc.internal.xjc :as xjc-int]
             [leiningen.xjc :as xjc]
             [leiningen.core.project :as project]
             [leiningen.clean :as clean]
@@ -31,9 +32,7 @@
 
 (defchecker java-sources-created [project class-names]
   (checker [_]
-           (let [generated-java (format "%s/%s"
-                                        (:target-path project)
-                                        (get-in project [:xjc-plugin :generated-java]))
+           (let [generated-java (xjc-int/lein-xjc-src-path project)
                  src-files (map #(format "%s/%s.java"
                                          generated-java
                                          (s/replace % #"\." "/"))

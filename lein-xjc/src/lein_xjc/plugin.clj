@@ -1,9 +1,11 @@
 (ns lein-xjc.plugin
-  (:require [lein-xjc.internal.target-dir :as td]
+  (:require [clojure.java.io :as io]
             [lein-xjc.internal.xjc :as xjc]))
 
-(def ^:private plugin-defaults
-  {:xjc-plugin {:generated-java "generated-java"}})
+(defn mkdir-p
+  [path]
+  (.. (io/file path)
+      (mkdirs)))
 
 (defn add-prep-task
   [project]
@@ -15,22 +17,16 @@
 
 (defn extend-java-source-paths
   [project]
-  (let [xjc-target-dir (td/mk-xjc-target-dir (:root project)
-                                             (:target-path project)
-                                             (get-in project
-                                                     [:xjc-plugin :generated-java]))
-        old-java-source-paths (:java-source-paths project)]
-    (assoc project :java-source-paths (cons (str xjc-target-dir)
-                                            old-java-source-paths))))
+  (let [xjc-src-path (xjc/lein-xjc-src-path project)]
+    (mkdir-p xjc-src-path)
+    (assoc project
+           :java-source-paths
+           (cons xjc-src-path (:java-source-paths project)))))
 
 (defn xjc-task
   [project]
-  (let [merged-project (merge plugin-defaults project)
-        xjc-target-dir (td/mk-xjc-target-dir (:root merged-project)
-                                  (:target-path merged-project)
-                                  (get-in merged-project [:xjc-plugin :generated-java]))
-        xjc-calls (get-in merged-project [:xjc-plugin :xjc-calls])]
-    (xjc/call-xjc (:root project) xjc-target-dir xjc-calls)))
+  (mkdir-p (xjc/lein-xjc-src-path project))
+  (xjc/call-xjc project))
 
 (defn middleware
   [project]
