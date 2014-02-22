@@ -1,7 +1,6 @@
 (ns lein-xjc.t-plugin
   (:require [cljito.core :refer :all]
             [lein-xjc.plugin :as plugin]
-            [lein-xjc.internal.target-dir :as td]
             [lein-xjc.internal.xjc :as xjc]
             [midje.sweet :refer :all])
   (:import [com.sun.tools.xjc Driver]))
