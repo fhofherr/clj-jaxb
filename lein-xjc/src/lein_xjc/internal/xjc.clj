@@ -14,6 +14,7 @@
               argv))]
     (-> ["-d" target-dir]
       (append-opt :binding #(list "-b" (prepend-root %)))
+      (append-opt :bindings (fn [bs] (mapcat #(list "-b" (prepend-root %)) bs)))
       (append-opt :xsd-file #(list (prepend-root %)))
       (append-opt :episode #(list "-episode" (prepend-root %))))))
 

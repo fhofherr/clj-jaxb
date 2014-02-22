@@ -33,6 +33,18 @@
                                   (format "%s/%s" (:root prj) "some.xsd")]]
                (xjc/mk-xjc-argvs prj) => [expected-argv]))
 
+       (fact "if multiple binding files are given they are all taken into account"
+             (let [prj {:root "/some/absoulte/path"
+                        :target-path "/path/to/target/dir"
+                        :xjc-plugin {:xjc-calls [{:xsd-file "some.xsd"
+                                                  :bindings ["binding1.jxb"
+                                                             "binding2.jxb"]}]}}
+                   expected-argv ["-d" (xjc/lein-xjc-src-path prj)
+                                  "-b" (format "%s/%s" (:root prj) "binding1.jxb")
+                                  "-b" (format "%s/%s" (:root prj) "binding2.jxb")
+                                  (format "%s/%s" (:root prj) "some.xsd")]]
+               (xjc/mk-xjc-argvs prj) => [expected-argv]))
+
        (fact "adds arguments to create episode files"
              (let [prj {:root "/some/absoulte/path"
                         :target-path "/path/to/target/dir"
