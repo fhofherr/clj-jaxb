@@ -31,6 +31,17 @@
                    expected-argv ["-d" (xjc/lein-xjc-src-path prj)
                                   "-b" (format "%s/%s" (:root prj) "some-binding.jxb")
                                   (format "%s/%s" (:root prj) "some.xsd")]]
+               (xjc/mk-xjc-argvs prj) => [expected-argv]))
+
+       (fact "adds arguments to create episode files"
+             (let [prj {:root "/some/absoulte/path"
+                        :target-path "/path/to/target/dir"
+                        :xjc-plugin {:xjc-calls [{:xsd-files "some.xsd"
+                                                  :episode "episode.file"}]}}
+                   expected-argv ["-d" (xjc/lein-xjc-src-path prj)
+                                  "-episode" (format "%s/%s"
+                                                     (:root prj)
+                                                     "episode.file")]]
                (xjc/mk-xjc-argvs prj) => [expected-argv])))
 
 (fact "call-xjc converts the given schema to an xjc argv and calls the xjc

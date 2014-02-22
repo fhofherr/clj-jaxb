@@ -51,6 +51,7 @@
 (def read-single-xsd-project (read-test-project "single-xsd"))
 (def read-mult-xsd-with-bindings-project
   (read-test-project "mult-xsd-with-bindings"))
+(def read-project-with-episode (read-test-project "project-with-episode"))
 
 (fact "running 'lein xjc' generates the java sources for
       the simple.xsd schema."
@@ -82,3 +83,15 @@
                                 "test.first.binding.FirstXsdType1"
                                 "test.second.binding.ObjectFactory"
                                 "test.second.binding.SecondXsdType1"])))
+
+(fact "specifying a episode file via the :episode keyword makes xjc take
+      it into account. The episode can then be used as a bindings file
+      for a sencond xjc call."
+      :integration-test
+      (let [project (read-project-with-episode)]
+        (xjc/xjc project) => (fn
+                               [_]
+                               (file-exists?
+                                 (format "%s/%s"
+                                         (:root project)
+                                         "target/lein-xjc/episode")))))

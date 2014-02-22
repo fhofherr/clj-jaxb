@@ -14,7 +14,8 @@
               argv))]
     (-> ["-d" target-dir]
       (append-opt :binding #(list "-b" (prepend-root %)))
-      (append-opt :xsd-file #(list (prepend-root %))))))
+      (append-opt :xsd-file #(list (prepend-root %)))
+      (append-opt :episode #(list "-episode" (prepend-root %))))))
 
 (defn mk-xjc-argvs
   [project]
