@@ -19,7 +19,8 @@
              (let [prj {:root "/some/absolute/path"
                         :target-path "/path/to/target/dir"
                         :xjc-plugin {:xjc-calls [{:xsd-file "some.xsd"}]}}
-                   expected-argv ["-d" (xjc/lein-xjc-src-path prj)
+                   expected-argv ["-extension"
+                                  "-d" (xjc/lein-xjc-src-path prj)
                                   (format "%s/%s" (:root prj) "some.xsd")]]
                (xjc/mk-xjc-argvs prj) => [expected-argv]))
 
@@ -28,7 +29,8 @@
                         :target-path "/path/to/target/dir"
                         :xjc-plugin {:xjc-calls [{:xsd-file "some.xsd"
                                                   :binding "some-binding.jxb"}]}}
-                   expected-argv ["-d" (xjc/lein-xjc-src-path prj)
+                   expected-argv ["-extension"
+                                  "-d" (xjc/lein-xjc-src-path prj)
                                   "-b" (format "%s/%s" (:root prj) "some-binding.jxb")
                                   (format "%s/%s" (:root prj) "some.xsd")]]
                (xjc/mk-xjc-argvs prj) => [expected-argv]))
@@ -39,7 +41,8 @@
                         :xjc-plugin {:xjc-calls [{:xsd-file "some.xsd"
                                                   :bindings ["binding1.jxb"
                                                              "binding2.jxb"]}]}}
-                   expected-argv ["-d" (xjc/lein-xjc-src-path prj)
+                   expected-argv ["-extension"
+                                  "-d" (xjc/lein-xjc-src-path prj)
                                   "-b" (format "%s/%s" (:root prj) "binding1.jxb")
                                   "-b" (format "%s/%s" (:root prj) "binding2.jxb")
                                   (format "%s/%s" (:root prj) "some.xsd")]]
@@ -50,7 +53,8 @@
                         :target-path "/path/to/target/dir"
                         :xjc-plugin {:xjc-calls [{:xsd-files "some.xsd"
                                                   :episode "episode.file"}]}}
-                   expected-argv ["-d" (xjc/lein-xjc-src-path prj)
+                   expected-argv ["-extension"
+                                  "-d" (xjc/lein-xjc-src-path prj)
                                   "-episode" (format "%s/%s"
                                                      (:root prj)
                                                      "episode.file")]]
