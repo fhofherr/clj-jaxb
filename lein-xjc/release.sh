@@ -27,7 +27,7 @@ echo "Run lein midje"
 lein midje
 
 echo "Create git tag"
-git tag -s "v$RELEASE_VERSION" -m "Tag version v$RELEASE_VERSION"
+git tag -s "lein-xjc-v$RELEASE_VERSION" -m "Tag version lein-xjc-v$RELEASE_VERSION"
 
 ./bump-versions.sh $NEXT_VERSION
 
