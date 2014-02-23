@@ -1,6 +1,8 @@
 (defproject clj-jaxb/lein-xjc "0.1.0"
   :description "Call xjc from leiningen."
   :url "http://github.com/fhofherr/clj-jaxb"
+  :scm {:name "git"
+        :url "https://github.com/fhofherr/clj-jaxb"}
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[com.sun.xml.bind/jaxb-xjc "2.2.7"]]
