@@ -1,4 +1,4 @@
-(defproject clj-jaxb/lein-xjc "0.1.0"
+(defproject clj-jaxb/lein-xjc "0.1.1"
   :description "Call xjc from leiningen."
   :url "http://github.com/fhofherr/clj-jaxb"
   :scm {:name "git"
