@@ -1,4 +1,4 @@
-(defproject clj-jaxb/lein-xjc "0.1.0-SNAPSHOT"
+(defproject clj-jaxb/lein-xjc "0.1.0"
   :description "Call xjc from leiningen."
   :url "http://github.com/fhofherr/clj-jaxb"
   :license {:name "Eclipse Public License"
