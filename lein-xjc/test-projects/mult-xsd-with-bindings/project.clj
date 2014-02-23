@@ -4,8 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :plugins [[lein-xjc "0.1.0-SNAPSHOT"]]
-  :xjc-plugin {:generated-java "generated-java"
-               :xjc-calls [{:xsd-file "xsd/first.xsd"
+  :xjc-plugin {:xjc-calls [{:xsd-file "xsd/first.xsd"
                             :binding "xsd/first-binding.jxb"}
                            {:xsd-file "xsd/second.xsd"
                             :binding "xsd/second-binding.jxb"}]})
